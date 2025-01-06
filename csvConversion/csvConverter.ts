@@ -58,17 +58,11 @@ export async function convertBinanceCsv(jsonCsvArray : BinanceCSVRawJsonEntry[])
         copilotEntry["Gebühren"] = 0
         copilotEntry.Steuern = 0
         const currency = extractNumberAndWord(entry["Trading total"])?.[1]!
-        // const c = currency.includes('USD') ? 'USD' : currency.includes('EUR') ? 'EUR' : undefined
         const c = currency.includes('USD') ? 'USD' : currency
-        // if(!c){
-        //     console.error(entry)
-        //     // continue
-        // }
+
             
         copilotEntry["Währung"] = c // c
         if(c != "EUR" && c != "USD") {
-
-
             const [orderAmount, orderAmountCurrency] = extractNumberAndWord(entry.Executed)!
             const [tradingAmount, tradingAmountCurrency] = extractNumberAndWord(entry["Trading total"])!
 
@@ -78,8 +72,6 @@ export async function convertBinanceCsv(jsonCsvArray : BinanceCSVRawJsonEntry[])
             const totalUSDX = priceX * parseFloat(orderAmount)
 
             const priceY = totalUSDX / parseFloat(tradingAmount)
-            console.log(entry)
-            console.log(usdInCurrencyX)
             const wechselkurs = await historicalUSDPriceConversion(date, "EUR")
 
             const sideX = entry.Side == "BUY" ? "Kauf" : "Verkauf"
